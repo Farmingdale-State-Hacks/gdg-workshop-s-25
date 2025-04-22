@@ -1,0 +1,23 @@
+{
+  "name": "gdg-workshop-s-25",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start:frontend": "cd frontend && mvn spring-boot:run",
+    "start:backend": "cd backend && php -S localhost:8001 -t public",
+    "start:ml": "cd ml && bunx ni && bun run dev",
+    "start:server": "cd server && make venv && make install && make run",
+    "dev": "concurrently \"bun run start:backend\" \"bun run start:frontend\" \"bun run start:server\" \"bun run start:ml\""
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "concurrently": "^9.1.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@antfu/ni": "^24.3.0"
+  }
+}
