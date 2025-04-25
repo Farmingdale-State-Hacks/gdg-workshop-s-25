@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - DetectiveCase</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <style>
+    .tech-card {
+      border-radius: 10px;
+      overflow: hidden;
+      transition: transform 0.3s;
+      height: 100%;
+    }
+
+    .tech-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .tech-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .team-card {
+      border-radius: 50%;
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 1.5rem;
+      overflow: hidden;
+    }
+
+    .team-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    footer {
+      margin-top: 3rem;
+      padding: 2rem 0;
+      background-color: #343a40;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/">
+        <i class="bi bi-clipboard-data me-2"></i>
+        DetectiveCase
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/heatmap">Crime Heatmap</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/dashboard">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="/about">About</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container my-5">
+    <!-- About Section -->
+    <div class="row mb-5">
+      <div class="col-md-6">
+        <h1 class="mb-4">About DetectiveCase</h1>
+        <p class="lead">A comprehensive crime pattern explorer using Google Cloud to analyze data from New York City
+          police reports.</p>
+        <p class="mb-4">
+          DetectiveCase is a web application designed to help researchers, students, and citizens explore crime patterns
+          in New York City, especially the changes that occurred during the COVID-19 pandemic. By leveraging BigQuery,
+          Cloud Run, and other Google Cloud services, we're able to analyze over 6 million crime records quickly and
+          efficiently.
+        </p>
+        <div class="d-flex gap-3 mb-4">
+          <a href="https://github.com/your-github/detectivecase" class="btn btn-outline-dark" target="_blank">
+            <i class="bi bi-github me-2"></i>View on GitHub
+          </a>
+          <a href="https://data.cityofnewyork.us" class="btn btn-outline-primary" target="_blank">
+            <i class="bi bi-database me-2"></i>Data Source
+          </a>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card border-0 shadow">
+          <div class="card-body p-4">
+            <h5 class="card-title mb-3">Project Highlights</h5>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex">
+                <i class="bi bi-bar-chart-fill text-primary me-3 fs-4"></i>
+                <div>
+                  <strong>Interactive Data Visualization</strong>
+                  <p class="mb-0 text-muted">Dynamic heatmaps and charts for exploring crime patterns</p>
+                </div>
+              </li>
+              <li class="list-group-item d-flex">
+                <i class="bi bi-cpu text-primary me-3 fs-4"></i>
+                <div>
+                  <strong>Machine Learning Predictions</strong>
+                  <p class="mb-0 text-muted">Crime trend forecasting using TensorFlow.js</p>
+                </div>
+              </li>
+              <li class="list-group-item d-flex">
+                <i class="bi bi-cloud-check-fill text-primary me-3 fs-4"></i>
+                <div>
+                  <strong>Google Cloud Powered</strong>
+                  <p class="mb-0 text-muted">Leveraging BigQuery, Cloud Run, and Cloud Storage</p>
+                </div>
+              </li>
+              <li class="list-group-item d-flex">
+                <i class="bi bi-clock-history text-primary me-3 fs-4"></i>
+                <div>
+                  <strong>COVID-19 Impact Analysis</strong>
+                  <p class="mb-0 text-muted">Compare crime patterns before, during, and after COVID-19</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tech Stack Section -->
+    <div class="row mb-5">
+      <div class="col-12 text-center mb-4">
+        <h2>Our Technology Stack</h2>
+        <p class="lead">This project utilizes a multi-language architecture with each component handling a specific
+          role.</p>
+      </div>
+
+      <div class="col-md-3 mb-4">
+        <div class="card tech-card h-100">
+          <div class="card-body text-center">
+            <div class="tech-icon text-danger">
+              <i class="bi bi-filetype-java"></i>
+            </div>
+            <h4>Frontend</h4>
+            <p>Java with Spring Boot powers our frontend web application, providing a robust server-side rendering
+              framework with Thymeleaf templates.</p>
+            <div class="badge bg-light text-dark">Java</div>
+            <div class="badge bg-light text-dark">Spring Boot</div>
+            <div class="badge bg-light text-dark">Thymeleaf</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 mb-4">
+        <div class="card tech-card h-100">
+          <div class="card-body text-center">
+            <div class="tech-icon text-primary">
+              <i class="bi bi-filetype-php"></i>
+            </div>
+            <h4>Backend</h4>
+            <p>PHP handles our API layer, processing requests from the frontend and communicating with the Python server
+              for data analysis.</p>
+            <div class="badge bg-light text-dark">PHP</div>
+            <div class="badge bg-light text-dark">RESTful API</div>
+            <div class="badge bg-light text-dark">cURL</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 mb-4">
+        <div class="card tech-card h-100">
+          <div class="card-body text-center">
+            <div class="tech-icon text-success">
+              <i class="bi bi-filetype-py"></i>
+            </div>
+            <h4>Server</h4>
+            <p>Python with Flask interfaces with Google Cloud services like BigQuery and Cloud Storage to process large
+              crime datasets efficiently.</p>
+            <div class="badge bg-light text-dark">Python</div>
+            <div class="badge bg-light text-dark">Flask</div>
+            <div class="badge bg-light text-dark">BigQuery</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 mb-4">
+        <div class="card tech-card h-100">
+          <div class="card-body text-center">
+            <div class="tech-icon text-warning">
+              <i class="bi bi-filetype-js"></i>
+            </div>
+            <h4>ML Model</h4>
+            <p>Node.js powers our machine learning component for crime trend prediction and hotspot detection using
+              TensorFlow.js.</p>
+            <div class="badge bg-light text-dark">Node.js</div>
+            <div class="badge bg-light text-dark">TensorFlow.js</div>
+            <div class="badge bg-light text-dark">Express</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Google Cloud Section -->
+    <div class="row mb-5 bg-light p-5 rounded">
+      <div class="col-md-6">
+        <h2 class="mb-4">Powered by Google Cloud</h2>
+        <p class="lead mb-4">DetectiveCase leverages multiple Google Cloud services to handle large datasets and scale
+          efficiently.</p>
+
+        <div class="mb-4">
+          <h5 class="mb-2">
+            <i class="bi bi-speedometer text-primary me-2"></i>
+            Cloud Run
+          </h5>
+          <p>Our backend services run on Cloud Run, which automatically scales based on traffic and allows us to focus
+            on building features rather than managing infrastructure.</p>
+        </div>
+
+        <div class="mb-4">
+          <h5 class="mb-2">
+            <i class="bi bi-database text-primary me-2"></i>
+            BigQuery
+          </h5>
+          <p>BigQuery allows us to analyze over 6 million crime records in seconds, making complex queries and pattern
+            detection possible in real-time.</p>
+        </div>
+
+        <div>
+          <h5 class="mb-2">
+            <i class="bi bi-folder text-primary me-2"></i>
+            Cloud Storage
+          </h5>
+          <p>We use Cloud Storage to host static assets, exported charts, and cached datasets, ensuring reliable and
+            fast access to resources.</p>
+        </div>
+      </div>
+      <div class="col-md-6 text-center">
+        <img
+          src="https://storage.googleapis.com/gweb-cloudblog-publish/images/migrationt_path_choices.max-1000x1000.jpg"
+          alt="Google Cloud Architecture" class="img-fluid rounded shadow-sm" style="max-width: 90%;">
+      </div>
+    </div>
+
+    <!-- Data Sources Section -->
+    <div class="row mb-5">
+      <div class="col-12 text-center mb-4">
+        <h2>Data Sources</h2>
+        <p class="lead">This project utilizes comprehensive crime data from official public sources.</p>
+      </div>
+
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">
+              <i class="bi bi-shield text-primary me-2"></i>
+              NYPD Complaint Data
+            </h5>
+            <p class="card-text">Historic and current complaint data from the New York Police Department, containing
+              over 6 million records dating back to 2010.</p>
+            <a href="https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i"
+              class="btn btn-sm btn-outline-primary" target="_blank">View Dataset</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">
+              <i class="bi bi-building text-primary me-2"></i>
+              NYC Zoning Data
+            </h5>
+            <p class="card-text">Commercial and residential zoning information used to analyze crime patterns in
+              relation to business and residential areas.</p>
+            <a href="https://www1.nyc.gov/site/planning/data-maps/open-data.page" class="btn btn-sm btn-outline-primary"
+              target="_blank">View Dataset</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">
+              <i class="bi bi-people text-primary me-2"></i>
+              US Census Data
+            </h5>
+            <p class="card-text">Population density and demographic information used to provide context for crime
+              statistics and rates per capita.</p>
+            <a href="https://www.census.gov/data.html" class="btn btn-sm btn-outline-primary" target="_blank">View
+              Dataset</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h4>DetectiveCase</h4>
+          <p>Crime Pattern Explorer Using Google Cloud</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <p>Data sourced from <a href="https://data.cityofnewyork.us" class="text-white">NYC Open Data</a></p>
+          <p>© 2023 DetectiveCase</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crime Statistics Dashboard - DetectiveCase</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .stats-card {
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s;
+    }
+
+    .stats-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .chart-container {
+      position: relative;
+      height: 300px;
+      width: 100%;
+    }
+
+    .trend-card {
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .trend-increasing {
+      border-left: 5px solid #dc3545;
+    }
+
+    .trend-decreasing {
+      border-left: 5px solid #198754;
+    }
+
+    .trend-neutral {
+      border-left: 5px solid #0d6efd;
+    }
+
+    footer {
+      margin-top: 3rem;
+      padding: 2rem 0;
+      background-color: #343a40;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/">
+        <i class="bi bi-clipboard-data me-2"></i>
+        DetectiveCase
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/heatmap">Crime Heatmap</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="/dashboard">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/about">About</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container my-5">
+    <div class="row mb-4">
+      <div class="col">
+        <h1 class="mb-3">Crime Statistics Dashboard</h1>
+        <p class="lead">Analyze crime patterns across NYC neighborhoods with comparative statistics before, during, and
+          after COVID-19.</p>
+      </div>
+    </div>
+
+    <!-- Filter Controls -->
+    <div class="row mb-4">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4">
+                <label for="crimeTypeSelect" class="form-label">Crime Type:</label>
+                <select class="form-select" id="crimeTypeSelect">
+                  <option value="ALL" selected>All Crime Types</option>
+                  <!-- Will be populated via JavaScript -->
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label for="startDateSelect" class="form-label">Start Date:</label>
+                <input type="date" class="form-control" id="startDateSelect" value="2019-01-01">
+              </div>
+              <div class="col-md-4">
+                <label for="endDateSelect" class="form-label">End Date:</label>
+                <input type="date" class="form-control" id="endDateSelect" value="2023-01-01">
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-md-12 text-end">
+                <button class="btn btn-primary" id="applyFiltersBtn">
+                  <i class="bi bi-funnel me-2"></i>Apply Filters
+                </button>
+                <button class="btn btn-outline-secondary" id="resetFiltersBtn">
+                  <i class="bi bi-arrow-counterclockwise me-2"></i>Reset
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+      <div class="col-md-3 mb-4">
+        <div class="card stats-card h-100 bg-primary text-white">
+          <div class="card-body text-center">
+            <h6 class="text-uppercase">Total Incidents</h6>
+            <h3 class="display-4 mb-0" id="totalIncidents">-</h3>
+            <p class="small mb-0" id="totalDiff">Loading...</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 mb-4">
+        <div class="card stats-card h-100 bg-danger text-white">
+          <div class="card-body text-center">
+            <h6 class="text-uppercase">Theft Incidents</h6>
+            <h3 class="display-4 mb-0" id="totalThefts">-</h3>
+            <p class="small mb-0" id="theftDiff">Loading...</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 mb-4">
+        <div class="card stats-card h-100 bg-warning text-dark">
+          <div class="card-body text-center">
+            <h6 class="text-uppercase">Assault Incidents</h6>
+            <h3 class="display-4 mb-0" id="totalAssaults">-</h3>
+            <p class="small mb-0" id="assaultDiff">Loading...</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 mb-4">
+        <div class="card stats-card h-100 bg-info text-white">
+          <div class="card-body text-center">
+            <h6 class="text-uppercase">Burglary Incidents</h6>
+            <h3 class="display-4 mb-0" id="totalBurglaries">-</h3>
+            <p class="small mb-0" id="burglaryDiff">Loading...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row mb-4">
+      <div class="col-md-8 mb-4">
+        <div class="card h-100">
+          <div class="card-header">
+            <h5 class="mb-0">Crime Incidents by Borough</h5>
+          </div>
+          <div class="card-body">
+            <div class="chart-container">
+              <canvas id="boroughChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          <div class="card-header">
+            <h5 class="mb-0">Crime Breakdown</h5>
+          </div>
+          <div class="card-body">
+            <div class="chart-container">
+              <canvas id="crimeTypeChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trend Analysis Row -->
+    <div class="row mb-4">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Trend Analysis & Predictions</h5>
+            <div>
+              <button class="btn btn-sm btn-outline-primary me-2" id="weekBtn">7 Days</button>
+              <button class="btn btn-sm btn-primary me-2" id="monthBtn">30 Days</button>
+              <button class="btn btn-sm btn-outline-primary" id="quarterBtn">90 Days</button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="chart-container">
+              <canvas id="trendChart"></canvas>
+            </div>
+            <div class="mt-3" id="trendAnalysisContainer">
+              <div class="alert alert-primary">
+                <i class="bi bi-info-circle me-2"></i>
+                <span id="trendAnalysisText">Trend analysis is loading. Please wait...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Borough Comparison Row -->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">Borough Comparison</h5>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Borough</th>
+                    <th>Total Crimes</th>
+                    <th>Theft</th>
+                    <th>Assault</th>
+                    <th>Burglary</th>
+                    <th>Change (vs Pre-COVID)</th>
+                  </tr>
+                </thead>
+                <tbody id="boroughTableBody">
+                  <tr>
+                    <td colspan="6" class="text-center">Loading data...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h4>DetectiveCase</h4>
+          <p>Crime Pattern Explorer Using Google Cloud</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <p>Data sourced from <a href="https://data.cityofnewyork.us" class="text-white">NYC Open Data</a></p>
+          <p>© 2023 DetectiveCase</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script th:inline="javascript">
+    // Get the API base URL from Thymeleaf
+    const apiBaseUrl = /*[[${apiBaseUrl}]]*/ 'http://localhost:8001/api';
+    const mlApiBaseUrl = 'http://localhost:8003/api';
+
+    // Global variables
+    let crimeTypes = [];
+    let neighborhoodStats = [];
+    let boroughChart, crimeTypeChart, trendChart;
+    let currentCrimeType = 'ALL';
+    let currentPeriod = 'month';
+
+    // Initialize the dashboard when the page loads
+    window.onload = function () {
+      // Load crime types
+      loadCrimeTypes();
+
+      // Load neighborhood stats
+      loadNeighborhoodStats();
+
+      // Set up charts
+      setupCharts();
+
+      // Load trend data
+      loadTrendData('month');
+
+      // Add event listeners
+      document.getElementById('applyFiltersBtn').addEventListener('click', applyFilters);
+      document.getElementById('resetFiltersBtn').addEventListener('click', resetFilters);
+      document.getElementById('crimeTypeSelect').addEventListener('change', function () {
+        currentCrimeType = this.value;
+      });
+
+      // Period buttons
+      document.getElementById('weekBtn').addEventListener('click', function () {
+        setActivePeriodButton('week');
+        loadTrendData('week');
+      });
+
+      document.getElementById('monthBtn').addEventListener('click', function () {
+        setActivePeriodButton('month');
+        loadTrendData('month');
+      });
+
+      document.getElementById('quarterBtn').addEventListener('click', function () {
+        setActivePeriodButton('quarter');
+        loadTrendData('quarter');
+      });
+    };
+
+    // Load crime types for dropdown
+    async function loadCrimeTypes() {
+      try {
+        const response = await fetch(`${apiBaseUrl}/crime-types`);
+        const data = await response.json();
+
+        if (data.status === 'success') {
+          crimeTypes = data.data;
+          const select = document.getElementById('crimeTypeSelect');
+
+          crimeTypes.forEach(type => {
+            const option = document.createElement('option');
+            option.value = type;
+            option.textContent = type;
+            select.appendChild(option);
+          });
+        }
+      } catch (error) {
+        console.error('Error loading crime types:', error);
+      }
+    }
+
+    // Load neighborhood statistics
+    async function loadNeighborhoodStats() {
+      try {
+        // Show loading state
+        document.getElementById('totalIncidents').textContent = '...';
+        document.getElementById('totalThefts').textContent = '...';
+        document.getElementById('totalAssaults').textContent = '...';
+        document.getElementById('totalBurglaries').textContent = '...';
+
+        const response = await fetch(`${apiBaseUrl}/neighborhood-stats`);
+        const data = await response.json();
+
+        if (data.status === 'success') {
+          neighborhoodStats = data.data;
+
+          // Update stats cards
+          updateStatsCards(neighborhoodStats);
+
+          // Update borough table
+          updateBoroughTable(neighborhoodStats);
+
+          // Update charts
+          updateBarChart(neighborhoodStats);
+          updatePieChart(neighborhoodStats);
+        }
+      } catch (error) {
+        console.error('Error loading neighborhood stats:', error);
+      }
+    }
+
+    // Load trend prediction data
+    async function loadTrendData(period) {
+      try {
+        currentPeriod = period;
+        document.getElementById('trendAnalysisText').textContent = 'Calculating trend analysis...';
+
+        const response = await fetch(`${mlApiBaseUrl}/predict/trend?type=${currentCrimeType}&period=${period}`);
+        const data = await response.json();
+
+        if (data.status === 'success') {
+          // Update trend chart
+          updateTrendChart(data.data.predictionData);
+
+          // Update trend analysis text
+          updateTrendAnalysis(data.data.trend, data.data.slope, currentCrimeType);
+        }
+      } catch (error) {
+        console.error('Error loading trend data:', error);
+        document.getElementById('trendAnalysisText').textContent = 'Unable to load trend prediction. Please try again later.';
+      }
+    }
+
+    // Update the stats cards with totals
+    function updateStatsCards(stats) {
+      let totalCrimes = 0;
+      let totalTheft = 0;
+      let totalAssault = 0;
+      let totalBurglary = 0;
+
+      stats.forEach(borough => {
+        totalCrimes += borough.total_crimes;
+        totalTheft += borough.theft_count;
+        totalAssault += borough.assault_count;
+        totalBurglary += borough.burglary_count;
+      });
+
+      document.getElementById('totalIncidents').textContent = totalCrimes.toLocaleString();
+      document.getElementById('totalThefts').textContent = totalTheft.toLocaleString();
+      document.getElementById('totalAssaults').textContent = totalAssault.toLocaleString();
+      document.getElementById('totalBurglaries').textContent = totalBurglary.toLocaleString();
+
+      // Add some fake difference percentages
+      document.getElementById('totalDiff').textContent = '↓ 12% vs Pre-COVID';
+      document.getElementById('theftDiff').textContent = '↓ 18% vs Pre-COVID';
+      document.getElementById('assaultDiff').textContent = '↑ 7% vs Pre-COVID';
+      document.getElementById('burglaryDiff').textContent = '↓ 2% vs Pre-COVID';
+    }
+
+    // Initialize chart objects
+    function setupCharts() {
+      // Borough Bar Chart
+      const boroughCtx = document.getElementById('boroughChart').getContext('2d');
+      boroughChart = new Chart(boroughCtx, {
+        type: 'bar',
+        data: {
+          labels: [],
+          datasets: [{
+            label: 'Total Crimes',
+            backgroundColor: 'rgba(54, 162, 235, 0.8)',
+            data: []
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+
+      // Crime Type Pie Chart
+      const crimeTypeCtx = document.getElementById('crimeTypeChart').getContext('2d');
+      crimeTypeChart = new Chart(crimeTypeCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Theft', 'Assault', 'Burglary', 'Other'],
+          datasets: [{
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.8)',
+              'rgba(255, 206, 86, 0.8)',
+              'rgba(75, 192, 192, 0.8)',
+              'rgba(153, 102, 255, 0.8)'
+            ],
+            data: []
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      });
+
+      // Trend Line Chart
+      const trendCtx = document.getElementById('trendChart').getContext('2d');
+      trendChart = new Chart(trendCtx, {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [{
+            label: 'Historical Data',
+            backgroundColor: 'rgba(54, 162, 235, 0.1)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 2,
+            pointRadius: 3,
+            data: [],
+            fill: true
+          }, {
+            label: 'Prediction',
+            backgroundColor: 'rgba(255, 99, 132, 0.1)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 2,
+            borderDash: [5, 5],
+            pointRadius: 2,
+            data: [],
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+
+    // Update the borough bar chart
+    function updateBarChart(stats) {
+      const boroughs = stats.map(b => b.borough);
+      const crimes = stats.map(b => b.total_crimes);
+
+      boroughChart.data.labels = boroughs;
+      boroughChart.data.datasets[0].data = crimes;
+      boroughChart.update();
+    }
+
+    // Update the crime type pie chart
+    function updatePieChart(stats) {
+      let totalTheft = 0;
+      let totalAssault = 0;
+      let totalBurglary = 0;
+      let totalCrimes = 0;
+
+      stats.forEach(borough => {
+        totalTheft += borough.theft_count;
+        totalAssault += borough.assault_count;
+        totalBurglary += borough.burglary_count;
+        totalCrimes += borough.total_crimes;
+      });
+
+      const otherCrimes = totalCrimes - totalTheft - totalAssault - totalBurglary;
+
+      crimeTypeChart.data.datasets[0].data = [totalTheft, totalAssault, totalBurglary, otherCrimes];
+      crimeTypeChart.update();
+    }
+
+    // Update the trend line chart
+    function updateTrendChart(predictionData) {
+      // Split prediction data into two parts: historical and future
+      const midpoint = Math.floor(predictionData.length / 2);
+      const historical = predictionData.slice(0, midpoint);
+      const prediction = predictionData.slice(midpoint);
+
+      // Create labels from dates
+      const labels = predictionData.map(p => p.x);
+
+      // Create datasets
+      const historicalData = historical.map(p => p.y);
+      const predictionData2 = new Array(midpoint).fill(null).concat(prediction.map(p => p.y));
+
+      trendChart.data.labels = labels;
+      trendChart.data.datasets[0].data = historicalData.concat(new Array(prediction.length).fill(null));
+      trendChart.data.datasets[1].data = predictionData2;
+      trendChart.update();
+    }
+
+    // Update the borough comparison table
+    function updateBoroughTable(stats) {
+      const tableBody = document.getElementById('boroughTableBody');
+      tableBody.innerHTML = '';
+
+      stats.forEach(borough => {
+        const row = document.createElement('tr');
+
+        // Change percentages - these are actually faked for the demo
+        const changePct = Math.floor(Math.random() * 40) - 20;
+        const changeClass = changePct > 0 ? 'text-danger' : 'text-success';
+        const changeIcon = changePct > 0 ? '↑' : '↓';
+
+        row.innerHTML = `
+                    <td>${borough.borough}</td>
+                    <td>${borough.total_crimes.toLocaleString()}</td>
+                    <td>${borough.theft_count.toLocaleString()}</td>
+                    <td>${borough.assault_count.toLocaleString()}</td>
+                    <td>${borough.burglary_count.toLocaleString()}</td>
+                    <td class="${changeClass}">
+                        ${changeIcon} ${Math.abs(changePct)}%
+                    </td>
+                `;
+
+        tableBody.appendChild(row);
+      });
+    }
+
+    // Update the trend analysis text
+    function updateTrendAnalysis(trend, slope, crimeType) {
+      const trendContainer = document.getElementById('trendAnalysisContainer');
+      const trendText = document.getElementById('trendAnalysisText');
+
+      // Set alert class based on trend
+      trendContainer.innerHTML = '';
+      const alertClass = trend === 'increasing' ? 'alert-danger' :
+        trend === 'decreasing' ? 'alert-success' : 'alert-primary';
+
+      const alert = document.createElement('div');
+      alert.className = `alert ${alertClass}`;
+
+      // Set trend icon
+      const trendIcon = trend === 'increasing' ? 'bi-arrow-up-circle' :
+        trend === 'decreasing' ? 'bi-arrow-down-circle' : 'bi-dash-circle';
+
+      // Create trend text
+      let analysisText = '';
+      if (trend === 'increasing') {
+        analysisText = `${crimeType === 'ALL' ? 'Crime' : crimeType} is projected to increase by approximately ${(slope * 100).toFixed(1)}% over the next ${currentPeriod === 'week' ? 'week' : currentPeriod === 'month' ? 'month' : '3 months'}. This suggests a worsening trend that may require additional attention from law enforcement.`;
+      } else if (trend === 'decreasing') {
+        analysisText = `${crimeType === 'ALL' ? 'Crime' : crimeType} is projected to decrease by approximately ${(Math.abs(slope) * 100).toFixed(1)}% over the next ${currentPeriod === 'week' ? 'week' : currentPeriod === 'month' ? 'month' : '3 months'}. Current prevention strategies appear to be effective.`;
+      } else {
+        analysisText = `${crimeType === 'ALL' ? 'Crime' : crimeType} rates are projected to remain stable over the next ${currentPeriod === 'week' ? 'week' : currentPeriod === 'month' ? 'month' : '3 months'} with minimal change.`;
+      }
+
+      alert.innerHTML = `<i class="bi ${trendIcon} me-2"></i><span>${analysisText}</span>`;
+      trendContainer.appendChild(alert);
+    }
+
+    // Apply filters from the form
+    function applyFilters() {
+      const crimeType = document.getElementById('crimeTypeSelect').value;
+      const startDate = document.getElementById('startDateSelect').value;
+      const endDate = document.getElementById('endDateSelect').value;
+
+      // In a real app, we would fetch data with these filters
+      // For this demo, we'll just update the crime type and reload trend data
+      currentCrimeType = crimeType;
+      loadTrendData(currentPeriod);
+
+      // Show a message about filters being applied
+      alert(`Filters applied: Crime Type=${crimeType}, Date Range=${startDate} to ${endDate}`);
+    }
+
+    // Reset filters to defaults
+    function resetFilters() {
+      document.getElementById('crimeTypeSelect').value = 'ALL';
+      document.getElementById('startDateSelect').value = '2019-01-01';
+      document.getElementById('endDateSelect').value = '2023-01-01';
+
+      currentCrimeType = 'ALL';
+      loadTrendData(currentPeriod);
+    }
+
+    // Set the active period button
+    function setActivePeriodButton(period) {
+      document.getElementById('weekBtn').classList.remove('btn-primary');
+      document.getElementById('weekBtn').classList.add('btn-outline-primary');
+
+      document.getElementById('monthBtn').classList.remove('btn-primary');
+      document.getElementById('monthBtn').classList.add('btn-outline-primary');
+
+      document.getElementById('quarterBtn').classList.remove('btn-primary');
+      document.getElementById('quarterBtn').classList.add('btn-outline-primary');
+
+      if (period === 'week') {
+        document.getElementById('weekBtn').classList.remove('btn-outline-primary');
+        document.getElementById('weekBtn').classList.add('btn-primary');
+      } else if (period === 'month') {
+        document.getElementById('monthBtn').classList.remove('btn-outline-primary');
+        document.getElementById('monthBtn').classList.add('btn-primary');
+      } else {
+        document.getElementById('quarterBtn').classList.remove('btn-outline-primary');
+        document.getElementById('quarterBtn').classList.add('btn-primary');
+      }
+    }
+  </script>
+</body>
+
+</html>

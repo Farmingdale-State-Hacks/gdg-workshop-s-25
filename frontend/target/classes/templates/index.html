@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DetectiveCase - Crime Pattern Explorer</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <style>
+    .hero-section {
+      background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+        url('https://images.unsplash.com/photo-1536599424071-0b215a388ba7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=600&q=80');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      padding: 5rem 0;
+      margin-bottom: 2rem;
+    }
+
+    .feature-card {
+      border-radius: 10px;
+      overflow: hidden;
+      transition: transform 0.3s;
+      height: 100%;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    footer {
+      margin-top: 3rem;
+      padding: 2rem 0;
+      background-color: #343a40;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/">
+        <i class="bi bi-clipboard-data me-2"></i>
+        DetectiveCase
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/heatmap">Crime Heatmap</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/dashboard">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/about">About</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-section text-center">
+    <div class="container">
+      <h1 class="display-4 fw-bold mb-4">DetectiveCase</h1>
+      <p class="lead mb-5">Explore crime patterns in New York City before, during, and after COVID-19</p>
+      <div class="d-flex justify-content-center gap-3">
+        <a href="/heatmap" class="btn btn-primary btn-lg">
+          <i class="bi bi-map me-2"></i>View Crime Heatmap
+        </a>
+        <a href="/dashboard" class="btn btn-outline-light btn-lg">
+          <i class="bi bi-graph-up me-2"></i>Analyze Data
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="container my-5">
+    <h2 class="text-center mb-5">Explore Crime Data</h2>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card feature-card h-100">
+          <div class="card-body text-center">
+            <div class="feature-icon text-primary">
+              <i class="bi bi-map"></i>
+            </div>
+            <h3>Interactive Heatmaps</h3>
+            <p>Visualize crime density across New York City neighborhoods with color-coded heatmaps showing where crimes
+              occur most frequently.</p>
+            <a href="/heatmap" class="btn btn-sm btn-outline-primary">Explore Heatmaps</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card feature-card h-100">
+          <div class="card-body text-center">
+            <div class="feature-icon text-primary">
+              <i class="bi bi-bar-chart"></i>
+            </div>
+            <h3>Crime Statistics</h3>
+            <p>Analyze crime data with interactive charts showing trends over time, including before, during, and after
+              COVID-19 lockdowns.</p>
+            <a href="/dashboard" class="btn btn-sm btn-outline-primary">View Statistics</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card feature-card h-100">
+          <div class="card-body text-center">
+            <div class="feature-icon text-primary">
+              <i class="bi bi-funnel"></i>
+            </div>
+            <h3>Customizable Filters</h3>
+            <p>Filter crime data by type, time period, and location to identify specific patterns and trends across
+              different categories.</p>
+            <a href="/dashboard" class="btn btn-sm btn-outline-primary">Try Filtering</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Data Sources Section -->
+  <section class="container my-5">
+    <h2 class="text-center mb-5">Data Sources</h2>
+    <div class="row">
+      <div class="col-md-6 mb-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h3 class="card-title">
+              <i class="bi bi-file-earmark-text me-2 text-primary"></i>
+              NYPD Complaint Data
+            </h3>
+            <p class="card-text">Historic and current crime complaint data from the New York Police Department,
+              featuring over 6 million records.</p>
+            <p class="card-text"><small class="text-muted">Source: NYC Open Data - data.cityofnewyork.us</small></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 mb-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h3 class="card-title">
+              <i class="bi bi-building me-2 text-primary"></i>
+              NYC Zoning Data
+            </h3>
+            <p class="card-text">Zoning and commercial district information used to analyze crime patterns in relation
+              to business areas.</p>
+            <p class="card-text"><small class="text-muted">Source: NYC Department of City Planning</small></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Google Cloud Section -->
+  <section class="bg-light py-5">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <h2 class="mb-4">Powered by Google Cloud</h2>
+          <p class="lead">Our application leverages multiple Google Cloud services to process and visualize massive
+            crime datasets efficiently.</p>
+          <ul class="list-unstyled">
+            <li class="mb-3">
+              <i class="bi bi-check2-circle text-success me-2"></i>
+              <strong>Cloud Run</strong> - Serverless deployment for automatic scaling
+            </li>
+            <li class="mb-3">
+              <i class="bi bi-check2-circle text-success me-2"></i>
+              <strong>BigQuery</strong> - Analyze millions of crime records in seconds
+            </li>
+            <li class="mb-3">
+              <i class="bi bi-check2-circle text-success me-2"></i>
+              <strong>Cloud Storage</strong> - Reliable storage for static assets and exports
+            </li>
+          </ul>
+        </div>
+        <div class="col-md-6 text-center">
+          <img
+            src="https://storage.googleapis.com/gweb-cloudblog-publish/images/3eKjlgWO3buW16HnyKC0nwD0Xnjl9P4M7I0L.max-1000x1000.png"
+            alt="Google Cloud Platform" class="img-fluid rounded" width="400">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h4>DetectiveCase</h4>
+          <p>Crime Pattern Explorer Using Google Cloud</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <p>Data sourced from <a href="https://data.cityofnewyork.us" class="text-white">NYC Open Data</a></p>
+          <p>© 2023 DetectiveCase</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- API Base URL for JavaScript -->
+  <script th:inline="javascript">
+    const apiBaseUrl = /*[[${apiBaseUrl}]]*/ 'http://localhost:8001/api';
+  </script>
+</body>
+
+</html>
