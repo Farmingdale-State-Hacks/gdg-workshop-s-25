@@ -1,6 +1,6 @@
 # DetectiveCase – Crime Pattern Explorer Using Google Cloud
 
-![DetectiveCase Logo](https://images.unsplash.com/photo-1536599424071-0b215a388ba7?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200&q=80)
+![gdg_cloud_workshop_ramhacks-s-25](https://github.com/user-attachments/assets/b995c861-6246-4087-ad4e-d82d951d5020)
 
 ## 💡 What It Does
 
